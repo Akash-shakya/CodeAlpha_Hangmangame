@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Hangman Game{% endblock %}
+
+{% block content %}
+<style>
+    .centerimg {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+    }
+</style>
+<div style="text-align: center; padding: 20px; border: 2px solid #ccc; border-radius: 10px;">
+    <h1 style="font-size: 56px; font-weight: bold;">Welcome to Hangman!</h1>
+    <p style="font-size: 24px;">Current progress: {{ current_progress }}</p>
+    <p style="font-size: 24px; font-weight: bold; color: red;">{{ message }}</p>
+    
+    {% if not session %}
+        <a href="{{ url_for('hangman') }}" style="text-decoration: none; font-size: 16px; padding: 10px 20px; background-color: #4CAF50; color: white; border-radius: 5px;">Play Again</a>
+    {% else %}
+        <form id="hangmanForm" method="post" style="margin-top: 20px;">
+            <label for="guess" style="font-size: 24px; font-weight: bold;">Guess a letter: </label>
+            <input type="text" id="guess" name="guess" maxlength="1" required style="font-size: 16px; padding: 5px; border-radius: 5px; border: 1px solid #ccc;">
+            
+            <div style="margin-top: 20px;">
+                <p style="font-size: 16px; font-weight: bold;">Click to guess:</p>
+                <div style="display: flex; justify-content: center; gap: 10px;">
+                    {% for letter in 'ABCDEFGHIJKLM' %}
+                        <a href="#" 
+                           onclick="document.getElementById('guess').value = '{{ letter }}'; document.getElementById('hangmanForm').submit();"
+                           style="display: inline-block; width: 40px; height: 40px; line-height: 40px; background-color: #007BFF; color: white; text-align: center; border-radius: 5px; text-decoration: none; font-weight: bold;">
+                            {{ letter }}
+                        </a>
+                    {% endfor %}
+                </div>
+                <div style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
+                    {% for letter in 'NOPQRSTUVWXYZ' %}
+                        <a href="#" 
+                           onclick="document.getElementById('guess').value = '{{ letter }}'; document.getElementById('hangmanForm').submit();"
+                           style="display: inline-block; width: 40px; height: 40px; line-height: 40px; background-color: #007BFF; color: white; text-align: center; border-radius: 5px; text-decoration: none; font-weight: bold;">
+                            {{ letter }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </form>
+    {% endif %}
+</div>
+
+<script>
+    // Optionally, you can add JavaScript to submit the form when Enter key is pressed
+    document.getElementById('guess').addEventListener('keypress', function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById('hangmanForm').submit();
+        }
+    });
+</script>
+<img src="{{ url_for('static', filename='hangman.jpg') }}" style="width:1400px;height:250px;" class="centerimg">
+{% endblock %}
