@@ -1,17 +1,18 @@
+#create a hangman game by Akashshakya
 from flask import Flask, render_template, request, redirect, url_for, session
 import random
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Required to use sessions
 
-def select_random_word():
+def select_random_word():  #select random words
     words = ["python", "hangman", "challenge", "laptop","alphabet", "code", "algorithm","keyboard"]
     return random.choice(words)
 
-def display_current_progress(word, guessed_letters):
+def display_current_progress(word, guessed_letters):   #join words if matched
     return " ".join([letter if letter in guessed_letters else "_" for letter in word])
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])  #for main page
 def hangman():
     if 'word' not in session:
         session['word'] = select_random_word()
@@ -57,7 +58,7 @@ def hangman():
 
     return render_template('game.html', current_progress=current_progress, message=message)
 
-@app.route('/result')
+@app.route('/result')     #for result page
 def result():
     message = request.args.get('message')
     return render_template('result.html', message=message)
